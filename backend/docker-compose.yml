@@ -1,0 +1,56 @@
+version: '3'
+services:
+    php:
+        build: ./docker/images/php
+        container_name: php
+        restart: unless-stopped
+        environment:
+            DB_HOST: postrges
+            DB_PASSWORD: '${DB_PASSWORD}'
+        volumes:
+            - ./:/usr/share/nginx/mitra-social-backend.loc
+            - ./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+
+    web:
+        build: ./docker/images/nginx
+        container_name: web
+        restart: unless-stopped
+        volumes:
+            - ./:/usr/share/nginx/mitra-social-backend.loc
+            - ../frontend/:/usr/share/nginx/mitra-social.loc
+            - ./docker/logs/nginx:/var/log/nginx
+            - ./docker/hosts:/etc/nginx/conf.d
+        links:
+            - php
+
+    ssl:
+        container_name: ssl
+        image: valian/docker-nginx-auto-ssl
+        restart: on-failure
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ssl_data:/etc/resty-auto-ssl
+        environment:
+            ALLOWED_DOMAINS: '${APP_DOMAIN}'
+            SITES: '${APP_DOMAIN}=web:80'
+
+    postrges:
+        image: postgres
+        container_name: posgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD}'
+            PGDATA: "/var/lib/postgresql/data/pgdata"
+        volumes:
+            - postgresdata:/var/lib/postgresql/data/pgdata
+
+volumes:
+    postgresdata:
+        driver: local
+    ssl_data:
+        driver: local
