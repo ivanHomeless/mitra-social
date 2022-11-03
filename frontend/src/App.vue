@@ -1,28 +1,28 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <component :is="layout"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import EmptyLayout from '@/layouts/EmptyLayout'
+import MainLayout from '@/layouts/MainLayout'
 export default {
-  name: 'App',
+  computed: {
+    layout() {
+      return (this.$route.meta.layout || 'empty') + '-layout'
+    }
+  },
   components: {
-    HelloWorld
+    EmptyLayout, MainLayout
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback';
+@import 'assets/plugins/fontawesome-free/css/all.css';
+@import 'assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css';
+@import 'assets/plugins/toastr/toastr.css';
+@import 'assets/css/adminlte.min.css';
 </style>

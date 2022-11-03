@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    'domain' => '.mitra-social.loc', //env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------
