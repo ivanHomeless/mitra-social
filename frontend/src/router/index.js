@@ -18,6 +18,18 @@ const routes = [
     component: () => import('../views/auth/LoginView')
   },
   {
+    path: '/forgot-password',
+    name: 'auth.forgot-password',
+    meta: {layout: 'empty'},
+    component: () => import('../views/auth/ForgotPasswordView')
+  },
+  {
+    path: '/reset-password/:token/email/:email',
+    name: 'auth.reset-password',
+    meta: {layout: 'empty'},
+    component: () => import('../views/auth/ResetPasswordView')
+  },
+  {
     path: '/register',
     name: 'auth.register',
     meta: {layout: 'empty'},
@@ -41,7 +53,8 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('x_xsrf_token')
 
   if (!token) {
-    if (to.name === 'auth.login' || to.name === 'auth.register') {
+    if (to.name === 'auth.login' || to.name === 'auth.register' || to.name === 'auth.forgot-password'
+        || to.name === 'auth.reset-password') {
       return next()
     } else {
       return next({name: 'auth.login'})

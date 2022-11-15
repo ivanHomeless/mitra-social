@@ -9,36 +9,24 @@
         <div class="card-body login-card-body">
 
           <form @submit.prevent="login" action="#" method="post">
-            <div class="input-group mb-3">
-              <input v-model="email"
-                     :class="{'is-invalid': notValidEmail}"
-                     type="email"
-                     class="form-control"
-                     placeholder="Email">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
-                </div>
-              </div>
-              <span v-if="notValidEmail" class="error invalid-feedback">{{ notValidEmailMessage }}</span>
-            </div>
-            <div class="input-group mb-3">
-              <input v-model="password"
-                     :class="{'is-invalid': notValidPassword}"
-                     type="password"
-                     class="form-control"
-                     placeholder="Пароль">
-              <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
-              </div>
-              <span v-if="notValidPassword" class="error invalid-feedback">{{ notValidPasswordMessage }}</span>
-            </div>
+            <app-input v-model.trim="email"
+                       type="email"
+                       placeholder="E-mail"
+                       :error="errors.email"
+                       icon="fas fa-envelope"
+            ></app-input>
+
+            <app-input v-model.trim="password"
+                       type="password"
+                       placeholder="Пароль"
+                       :error="errors.password"
+                       icon="fas fa-lock"
+            ></app-input>
+
             <div class="row">
               <div class="col-8">
                 <div class="icheck-primary">
-                  <input type="checkbox" id="remember">
+                  <input v-model="remember" type="checkbox" id="remember" name="remember">
                   <label for="remember">
                     Запомнить меня?
                   </label>
@@ -53,7 +41,7 @@
           </form>
 
           <p class="mb-1">
-            <a href="forgot-password.html">Забыли пароль?</a>
+            <router-link :to="{name: 'auth.forgot-password'}">Забыли пароль?</router-link>
           </p>
           <p class="mb-0">
             <router-link :to="{name: 'auth.register'}" class="text-center">Зарегестрироваться</router-link>
@@ -67,43 +55,38 @@
 </template>
 
 <script>
-
+import AppInput from "@/components/form/AppInput";
+import checkErrors from "@/mixins/checkErrors";
 export default {
   name: 'LoginView',
   data() {
     return {
       email: null,
       password: null,
-      notValidEmail: null,
-      notValidEmailMessage: null,
-      notValidPassword: null,
-      notValidPasswordMessage: null,
+      remember: false,
+      errors: {
+        email: null,
+        password: null
+      }
     }
   },
   methods: {
     login() {
       axios.get('/sanctum/csrf-cookie').then(response => {
-        axios.post('/login', {email: this.email, password: this.password})
+        axios.post('/login', {email: this.email, password: this.password, remember: this.remember})
             .then(response => {
               localStorage.setItem('x_xsrf_token', response.config.headers['X-XSRF-TOKEN'])
               this.$router.push({name: 'user.profile'})
             })
             .catch(error => {
-              if (error.response.data.errors.email) {
-                this.notValidEmail = true
-                this.notValidEmailMessage = error.response.data.errors.email[0]
-              }
-              if (error.response.data.errors.password) {
-                this.notValidPassword = true
-                this.notValidPasswordMessage = error.response.data.errors.password[0]
-                console.log(error.response.data.errors.password[0])
-              }
+              this.checkError(error, this.errors)
               toastr.error(error.response.data.message)
-
             })
       });
-    }
-  }
+    },
+  },
+  mixins: [checkErrors],
+  components: {AppInput}
 
 }
 </script>

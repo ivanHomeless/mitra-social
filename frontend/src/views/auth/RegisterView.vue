@@ -42,6 +42,37 @@
               </div>
             </div>
           </div>
+          <div>День рождения</div>
+          <div class="input-group mb-3">
+            <div class="form-group">
+              <select class="form-control">
+                <option>option 1</option>
+                <option>option 2</option>
+                <option>option 3</option>
+                <option>option 4</option>
+                <option>option 5</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-control">
+                <option>option 1</option>
+                <option>option 2</option>
+                <option>option 3</option>
+                <option>option 4</option>
+                <option>option 5</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-control">
+                <option>option 1</option>
+                <option>option 2</option>
+                <option>option 3</option>
+                <option>option 4</option>
+                <option>option 5</option>
+              </select>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-8">
               <div class="icheck-primary">
