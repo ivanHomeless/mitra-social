@@ -18,12 +18,14 @@
                        type="password"
                        placeholder="Пароль"
                        :error="errors.password"
+                       icon="fas fa-lock"
             ></app-input>
 
             <app-input v-model.trim="password_confirmation"
                        type="password"
                        placeholder="Повторите пароль"
                        :error="errors.password_confirmation"
+                       icon="fas fa-lock"
             ></app-input>
 
             <div class="row">

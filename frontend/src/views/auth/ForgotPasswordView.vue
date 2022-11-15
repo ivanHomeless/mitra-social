@@ -15,6 +15,7 @@
                        type="email"
                        placeholder="E-mail"
                        :error="errors.email"
+                       icon="fas fa-envelope"
             ></app-input>
             <div class="row">
               <div class="col-12">
