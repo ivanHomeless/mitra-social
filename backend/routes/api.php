@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GeoController;
 use App\Http\Controllers\GetController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,13 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        $user = User::with('city')->find($request->user()->id);
+        return response()->json($user);
+    });
 });
+
+
 
 Route::get('/get', [GetController::class, 'index']);
 
-Route::group(['prefix' => 'geo' ], function () {
+Route::group(['prefix' => 'geo'], function () {
     Route::get('/cities/{name?}', [GeoController::class, 'getCities']);
 
     Route::get('/countries', [GeoController::class, 'getCountries']);

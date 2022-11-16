@@ -100,9 +100,20 @@ class User extends Authenticatable
         'deleted_at',
         'birth',
     ];
+    protected $appends = ['country_name', 'region_name'];
 
     public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    protected function getCountryNameAttribute(): string
+    {
+        return $this->city->country->name;
+    }
+
+    protected function getRegionNameAttribute(): string
+    {
+        return $this->city->region->name;
     }
 }
