@@ -20,8 +20,8 @@ class CitiesTableSeeder extends Seeder
         foreach ($file as $line) {
             $dataArray = explode(',', $line,);
             $data[] = [
-                'id_region' => (int)$dataArray[1],
-                'id_country' => (int)$dataArray[2],
+                'region_id' => (int)$dataArray[1],
+                'country_id' => (int)$dataArray[2],
                 'name' => trim($dataArray[3]),
             ];
         }

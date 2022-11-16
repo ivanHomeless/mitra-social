@@ -65,6 +65,7 @@ router.beforeEach((to, from, next) => {
     return next({name: 'user.profile'})
   }
 
+
   if (to.name === 'home' && token) {
     return next({name: 'user.profile'})
   }

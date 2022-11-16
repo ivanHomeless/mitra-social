@@ -9,77 +9,83 @@
       <div class="card-body register-card-body">
         <p class="login-box-msg">Регистрация</p>
 
-        <form action="../../index.html" method="post">
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Имя">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-user"></span>
-              </div>
-            </div>
+        <form @submit.prevent="sendForm" method="post">
+
+          <app-input v-model.trim="name"
+                     type="text"
+                     placeholder="Имя"
+                     :error="errors.name"
+                     icon="fas fa-user"
+          ></app-input>
+
+          <app-input v-model.trim="lastname"
+                     type="text"
+                     placeholder="Фамилия"
+                     :error="errors.lastname"
+                     icon="fas fa-user"
+          ></app-input>
+
+          <app-input v-model.trim="email"
+                     type="email"
+                     placeholder="E-mail"
+                     :error="errors.email"
+                     icon="fas fa-envelope"
+          ></app-input>
+
+          <div class="form-group">
+            <select id="gender"
+                    v-model="gender"
+                    class="form-control"
+                    :class="{'is-invalid': errors.gender}"
+            >
+              <option value="">Пол</option>
+              <option value="1">Мужской</option>
+              <option value="2">Женский</option>
+            </select>
+
+            <span v-if="errors.gender" class="error invalid-feedback">{{ errors.gender }}</span>
           </div>
-          <div class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Email">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
-              </div>
-            </div>
+
+          <app-input v-model.trim="password"
+                     type="password"
+                     placeholder="Пароль"
+                     :error="errors.password"
+                     icon="fas fa-lock"
+          ></app-input>
+
+          <app-input v-model.trim="password_confirmation"
+                     type="password"
+                     placeholder="Повторите пароль"
+                     :error="errors.password_confirmation"
+                     icon="fas fa-lock"
+          ></app-input>
+
+          <div class="form-group mb-3">
+            <span :class="{'is-invalid': errors.city_id}">Город: </span>
+            <v-select @search="searchCities" v-model="city_id" :options="options"></v-select>
+            <span v-if="errors.city_id" class="error invalid-feedback">{{ errors.city_id }}</span>
           </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Пароль">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
-          <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Повторите пароль">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
-          <div>День рождения</div>
-          <div class="input-group mb-3">
-            <div class="form-group">
-              <select class="form-control">
-                <option>option 1</option>
-                <option>option 2</option>
-                <option>option 3</option>
-                <option>option 4</option>
-                <option>option 5</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <select class="form-control">
-                <option>option 1</option>
-                <option>option 2</option>
-                <option>option 3</option>
-                <option>option 4</option>
-                <option>option 5</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <select class="form-control">
-                <option>option 1</option>
-                <option>option 2</option>
-                <option>option 3</option>
-                <option>option 4</option>
-                <option>option 5</option>
-              </select>
-            </div>
+
+          <div class="form-group mb-3">
+            <span class="is-invalid" v-if="errors.birth"></span>
+            <date-picker
+                :placeholder="'Дата рождения'"
+                v-model="birth"
+                valueType="format"
+                :disabled-date="disabledRange"
+                :default-value="new Date(2000, 0, 1)"
+            ></date-picker>
+            <span v-if="errors.birth" class="error invalid-feedback">{{ errors.birth }}</span>
           </div>
 
           <div class="row">
             <div class="col-8">
               <div class="icheck-primary">
-                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                <input :class="{'is-invalid': errors.agreeTerms}" type="checkbox" id="agreeTerms" name="terms" v-model="agreeTerms">
                 <label for="agreeTerms">
                   Я согласен с <a href="#">правилами</a>
                 </label>
+                <span v-if="errors.agreeTerms" class="error invalid-feedback">{{ errors.agreeTerms }}</span>
               </div>
             </div>
             <!-- /.col -->
@@ -100,11 +106,92 @@
 </template>
 
 <script>
+import AppInput from "@/components/form/AppInput";
+import checkErrors from "@/mixins/checkErrors";
+import DatePicker from 'vue2-datepicker';
+import vSelect from 'vue-select'
+import 'vue2-datepicker/index.css';
+import 'vue-select/dist/vue-select.css';
+import 'vue2-datepicker/locale/ru';
+
 export default {
-  name: "RegisterView"
+  name: "RegisterView",
+  data() {
+    return {
+      disabledSelect: false,
+      name: null,
+      lastname: null,
+      password: null,
+      password_confirmation: null,
+      email: null,
+      birth: null,
+      city_id: '',
+      agreeTerms: false,
+      gender: '',
+      errors: {
+        name: null,
+        lastname: null,
+        password: null,
+        password_confirmation: null,
+        email: null,
+        birth: null,
+        city_id: null,
+        agreeTerms: null,
+        gender: null,
+      },
+      options: [
+        ''
+      ],
+    }
+  },
+  methods: {
+    sendForm() {
+      if (this.agreeTerms) {
+        axios.get('/sanctum/csrf-cookie/').then(response => {
+          axios.post('/register/', {
+            name: this.name,
+            lastname: this.lastname,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation,
+            city_id: this.city_id.id,
+            birth: this.birth,
+            gender: this.gender,
+          }).then(response => {
+            localStorage.setItem('x_xsrf_token', response.config.headers['X-XSRF-TOKEN'])
+            this.$router.push({name: 'user.profile'})
+          }).catch(error => {
+            this.checkError(error, this.errors)
+            toastr.error(error.response.data.message)
+          })
+        })
+      } else {
+        this.errors.agreeTerms = 'Вы должны согласиться с правилами.'
+      }
+    },
+
+    searchCities(string) {
+      axios.get('/api/geo/cities/' + string).then(response => {
+        this.options = response.data.map((element) => {
+          return {
+            id: element.id,
+            label: element.fullName
+          }
+        })
+      }).catch(error => {})
+    },
+    disabledRange(date) {
+      return date < new Date(1920, 1, 1) || date > new Date();
+    }
+  },
+  components: {vSelect, AppInput, DatePicker},
+  mixins: [checkErrors]
 }
 </script>
 
 <style scoped>
-
+.login-box, .register-box {
+  width: auto;
+  max-width: 427px;
+}
 </style>

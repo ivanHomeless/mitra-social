@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -36,6 +37,21 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property string|null $two_factor_confirmed_at
+ * @property string|null $column_12
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereColumn12($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorConfirmedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorRecoveryCodes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorSecret($value)
+ * @property string $lastname
+ * @property Carbon $birth
+ * @property int|null $city_id
+ * @property-read \App\Models\City|null $city
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastname($value)
  */
 class User extends Authenticatable
 {
@@ -48,6 +64,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'lastname',
+        'gender',
+        'city_id',
+        'birth',
         'email',
         'password',
     ];
@@ -70,4 +90,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @var string[]
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'birth',
+    ];
+
+    public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
 }

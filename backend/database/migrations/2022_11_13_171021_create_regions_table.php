@@ -15,10 +15,10 @@ class CreateRegionsTable extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('id_country');
+            $table->foreignId('country_id');
             $table->string('name');
 
-            $table->foreign('id_country')->references('id')->on('countries');
+            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

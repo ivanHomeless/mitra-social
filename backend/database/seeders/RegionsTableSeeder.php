@@ -20,7 +20,7 @@ class RegionsTableSeeder extends Seeder
         foreach ($file as $line) {
             $dataArray = explode(',', $line,);
             $data[] = [
-                'id_country' => (int)$dataArray[1],
+                'country_id' => (int)$dataArray[1],
                 'name' => trim($dataArray[2]),
             ];
         }

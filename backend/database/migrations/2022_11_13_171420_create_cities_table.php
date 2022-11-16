@@ -15,12 +15,12 @@ class CreateCitiesTable extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('id_region');
-            $table->foreignId('id_country');
+            $table->foreignId('region_id');
+            $table->foreignId('country_id');
             $table->string('name');
 
-            $table->foreign('id_region')->references('id')->on('regions');
-            $table->foreign('id_country')->references('id')->on('countries');
+            $table->foreign('region_id')->references('id')->on('regions');
+            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

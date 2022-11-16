@@ -9,5 +9,7 @@
 </script>
 
 <style scoped>
-
+body {
+  background: #e9ecef;
+}
 </style>

@@ -20,7 +20,7 @@
 export default {
   name: "AppInput",
   props: ['type', 'placeholder', 'error', 'value', 'icon'],
-  emits: ['update:modelValue'],
+  emits: ['input'],
   methods: {
     change(event) {
       this.$emit('input', event.target.value)
