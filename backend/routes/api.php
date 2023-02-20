@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\GeoController;
+use App\Http\Controllers\Data\GeoController;
 use App\Http\Controllers\GetController;
-use App\Models\User;
+use App\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
+    Route::get('/auth/user', function (Request $request) {
         $user = User::with('city')->find($request->user()->id);
         return response()->json($user);
     });

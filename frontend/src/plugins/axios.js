@@ -2,7 +2,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
-import router from '@/router'
+import router from "@/router";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -44,7 +44,7 @@ _axios.interceptors.response.use(
         localStorage.removeItem('x_xsrf_token')
       }
 
-      router.push({name: 'user.login'})
+      //this.router.push({name: 'auth.login'})
     }
     return Promise.reject(error);
   }

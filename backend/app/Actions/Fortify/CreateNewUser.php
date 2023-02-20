@@ -2,8 +2,8 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\City;
-use App\Models\User;
+use App\Entities\City;
+use App\Entities\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -17,7 +17,7 @@ class CreateNewUser implements CreatesNewUsers
      * Validate and create a newly registered user.
      *
      * @param  array  $input
-     * @return \App\Models\User
+     * @return \App\Entities\User
      */
     public function create(array $input)
     {
@@ -32,7 +32,6 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'city_id' => ['required','exists:cities,id'],
             'birth' => ['required', 'date'],
             'gender' => ['required', 'min:1', 'max:2', 'integer'],
         ])->validate();

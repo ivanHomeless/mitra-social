@@ -53,7 +53,7 @@
 
 <script>
 import AppInput from "@/components/form/AppInput";
-import checkErrors from "@/mixins/checkErrors";
+import checkErrors from "@/mixins/checkErrorResponse";
 import AppModal from "@/components/common/AppModal";
 
 export default {

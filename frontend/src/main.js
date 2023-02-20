@@ -12,7 +12,7 @@ window.$ = window.jQuery = $;
 import '@/assets/plugins/bootstrap/js/bootstrap.bundle.min'
 import '@/assets/plugins/sweetalert2/sweetalert2.min'
 import '@/assets/plugins/toastr/toastr.min'
-import '@/assets/js/adminlte.min'
+import '@/assets/js/adminlte'
 
 Vue.config.productionTip = false
 

@@ -56,7 +56,7 @@
 
 <script>
 import AppInput from "@/components/form/AppInput";
-import checkErrors from "@/mixins/checkErrors";
+import checkErrorResponse from "@/mixins/checkErrorResponse";
 export default {
   name: 'LoginView',
   data() {
@@ -64,28 +64,26 @@ export default {
       email: null,
       password: null,
       remember: false,
-      errors: {
-        email: null,
-        password: null
-      }
+      errors: {}
     }
   },
   methods: {
-    login() {
-      axios.get('/sanctum/csrf-cookie').then(response => {
-        axios.post('/login', {email: this.email, password: this.password, remember: this.remember})
-            .then(response => {
-              localStorage.setItem('x_xsrf_token', response.config.headers['X-XSRF-TOKEN'])
-              this.$router.push({name: 'user.profile'})
-            })
-            .catch(error => {
-              this.checkError(error, this.errors)
-              toastr.error(error.response.data.message)
-            })
-      });
+    async login() {
+      try {
+        const formData = {email: this.email, password: this.password, remember: this.remember}
+        await this.$store.dispatch('login', formData)
+      } catch (error) {
+        if (error.response) {
+          this.errors = this.checkErrorResponse(error)
+          toastr.error((error.response.data.message))
+          return
+        }
+        console.error(error.message)
+      }
+
     },
   },
-  mixins: [checkErrors],
+  mixins: [checkErrorResponse],
   components: {AppInput}
 
 }
