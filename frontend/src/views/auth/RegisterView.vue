@@ -107,7 +107,7 @@
 
 <script>
 import AppInput from "@/components/form/AppInput";
-import checkErrors from "@/mixins/checkErrors";
+import checkErrors from "@/mixins/checkErrorResponse";
 import DatePicker from 'vue2-datepicker';
 import vSelect from 'vue-select'
 import 'vue2-datepicker/index.css';

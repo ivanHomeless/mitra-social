@@ -50,11 +50,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
   const token = localStorage.getItem('x_xsrf_token')
 
+  const noAuthRouters = ['auth.login', 'auth.register', 'auth.forgot-password', 'auth.reset-password']
+
   if (!token) {
-    if (to.name === 'auth.login' || to.name === 'auth.register' || to.name === 'auth.forgot-password'
-        || to.name === 'auth.reset-password') {
+    if (noAuthRouters.includes(to.name)) {
       return next()
     } else {
       return next({name: 'auth.login'})
@@ -64,7 +66,6 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'auth.login' || to.name === 'auth.register' && token) {
     return next({name: 'user.profile'})
   }
-
 
   if (to.name === 'home' && token) {
     return next({name: 'user.profile'})
